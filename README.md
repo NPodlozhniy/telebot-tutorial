@@ -8,13 +8,10 @@ $ set TOKEN=<YOUR TOKEN>
 $ python main.py
 ```
 
-2. To start "Second telegram bat" you should add a couple more lines to the beginning
+2. "Second telegram bot" starts on the Heroku by default, but to run locally you should just add one line to the beginning of the code above and modify the launch command:
 
 ```
 $ pip install flask
-```
-To run locally:
-```
 $ python main.py --local
 ```
 
