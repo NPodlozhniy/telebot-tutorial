@@ -4,7 +4,7 @@ import telebot
 from flask import Flask, request
 
 BASE_URL = 'https://telebottutorial.herokuapp.com/'
-TELEBOT_URL = ''
+TELEBOT_URL = 'telebot_webhook/'
 
 API_TOKEN = os.environ['TOKEN']
 bot = telebot.TeleBot(API_TOKEN)
