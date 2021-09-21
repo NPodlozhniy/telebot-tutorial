@@ -1,9 +1,5 @@
 pytelegrambotapi
 flask
-numpy
-pandas
-sqlalchemy
-pymssql
 gspread
 oauth2client
 df2gspread
