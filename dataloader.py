@@ -22,7 +22,7 @@ KEYFILE = os.environ['KEYFILE']
 
 scope = ['https://spreadsheets.google.com/feeds',
          'https://www.googleapis.com/auth/drive']
-credentials = ServiceAccountCredentials.from_json_keyfile_name(KEYFILE, scopes=scope)
+credentials = ServiceAccountCredentials.from_json_keyfile_dict(KEYFILE, scopes=scope)
 gc = gspread.authorize(credentials)
 spreadsheet_key = "1pp01qoxMGsS7oCIwf83eOI0W_Wo6vYhhlBcXlmcGKL8"
 
