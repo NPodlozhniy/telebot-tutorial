@@ -6,7 +6,7 @@ from dataloader import stats
 
 import time
 def test():
-    time.sleep(1)
+    time.sleep(10)
     a = range(1, 10)
     return f"Hello, dear colleague! \n Statistics for yesterday: \n {[x for x in a]}"
 
