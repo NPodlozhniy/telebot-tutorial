@@ -4,6 +4,10 @@ import telebot
 from flask import Flask, request
 from dataloader import stats
 
+def test():
+    a = range(1, 10)
+    return f"Hello, dear colleague! \n Statistics for yesterday: \n {[x for x in a]}"
+
 BASE_URL = 'https://telebottutorial.herokuapp.com/'
 TELEBOT_URL = 'telebot_webhook/'
 
@@ -36,8 +40,8 @@ def send_stats(message):
 
 def get_name(message):
     if message.text == SECRETNAME:
-#         bot.send_message(message.chat.id, stats())
-        bot.send_message(message.chat.id, 'Yah!')
+        bot.send_message(message.chat.id, test())
+#         bot.send_message(message.chat.id, 'Yah!')
     else:
         bot.send_message(message.chat.id, "Are you really a ZELF employee?")
 
