@@ -109,9 +109,9 @@ def stats():
                           row_names=False,
                           credentials=credentials)
         ref_dict[wks_name] = int(df[df["date"] == yesterday].iloc[:, 1].values[0])
-#         fact_dict[wks_name] = pd.read_sql(selects[idx], engine)["value"][0]
+        fact_dict[wks_name] = pd.read_sql(selects[idx], engine)["value"][0]
 #     text = "Hello, dear colleague! \n Statistics for yesterday: \n" + \
 #     '\n'.join([f" -> {key}s: expectation = {ref_dict[key]}, reality = {fact_dict[key]}"
 #                for key in ref_dict.keys()])
 #     return text
-    return f"{[a for a in ref_dict.values()]}"
+    return f"{[a for a in ref_dict.values()]} + {[a for a in fact_dict.values()]}"
