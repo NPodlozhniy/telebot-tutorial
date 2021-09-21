@@ -1,6 +1,5 @@
 import argparse
 import os
-SECRETNAME = os.environ.get('SECRETNAME')
 import telebot
 from flask import Flask, request
 from dataloader import stats

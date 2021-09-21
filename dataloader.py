@@ -18,12 +18,14 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from df2gspread import gspread2df as g2d
 
+"\n".join(b["private_key"].split("\\n"))
+
 def create_keyfile_dict():
     return {
         "type": os.environ.get("SHEET_TYPE"),
         "project_id": os.environ.get("SHEET_PROJECT_ID"),
         "private_key_id": os.environ.get("SHEET_PRIVATE_KEY_ID"),
-        "private_key": os.environ.get("SHEET_PRIVATE_KEY"),
+        "private_key": "\n".join(os.environ.get("SHEET_PRIVATE_KEY").split("\\n")),
         "client_email": os.environ.get("SHEET_CLIENT_EMAIL"),
         "client_id": os.environ.get("SHEET_CLIENT_ID"),
         "auth_uri": os.environ.get("SHEET_AUTH_URI"),
