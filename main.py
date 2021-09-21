@@ -36,7 +36,8 @@ def send_stats(message):
 
 def get_name(message):
     if message.text == SECRETNAME:
-        bot.send_message(message.chat.id, stats())
+#         bot.send_message(message.chat.id, stats())
+        bot.send_message(message.chat.id, 'Yah!')
     else:
         bot.send_message(message.chat.id, "Are you really a ZELF employee?")
 
