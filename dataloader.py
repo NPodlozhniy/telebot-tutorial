@@ -18,11 +18,23 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from df2gspread import gspread2df as g2d
 
-KEYFILE = os.environ['KEYFILE']
+def create_keyfile_dict():
+    return {
+        "type": os.environ.get("SHEET_TYPE"),
+        "project_id": os.environ.get("SHEET_PROJECT_ID"),
+        "private_key_id": os.environ.get("SHEET_PRIVATE_KEY_ID"),
+        "private_key": os.environ.get("SHEET_PRIVATE_KEY"),
+        "client_email": os.environ.get("SHEET_CLIENT_EMAIL"),
+        "client_id": os.environ.get("SHEET_CLIENT_ID"),
+        "auth_uri": os.environ.get("SHEET_AUTH_URI"),
+        "token_uri": os.environ.get("SHEET_TOKEN_URI"),
+        "auth_provider_x509_cert_url": os.environ.get("SHEET_AUTH_PROVIDER_X509_CERT_URL"),
+        "client_x509_cert_url": os.environ.get("SHEET_CLIENT_X509_CERT_URL")
+    }
 
 scope = ['https://spreadsheets.google.com/feeds',
          'https://www.googleapis.com/auth/drive']
-credentials = ServiceAccountCredentials.from_json_keyfile_dict(KEYFILE, scopes=scope)
+credentials = ServiceAccountCredentials.from_json_keyfile_dict(create_keyfile_dict(), scopes=scope)
 gc = gspread.authorize(credentials)
 spreadsheet_key = "1pp01qoxMGsS7oCIwf83eOI0W_Wo6vYhhlBcXlmcGKL8"
 
