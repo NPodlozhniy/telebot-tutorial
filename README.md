@@ -18,14 +18,8 @@ $ python main.py --local
 3. "Third telegram bot" is the first intelligent version of bot with simple authentication through a security question, which, for instance, can send statistics on the main metrics for yesterday. In order to run locally, you need to run a few more commands:
 
 ```
-$ pip install numpy
-$ pip install pandas
-$ pip install sqlalchemy
-$ pip install pymssql
 $ pip install gspread
 $ pip install oauth2client
 $ pip install df2gspread
 $ set SECRETNAME=<YOUR NAME>
-$ set PASSWORD=<YOUR PASSWORD>
-$ set KEYFILE=<YOUR KEYFILE>
 ```

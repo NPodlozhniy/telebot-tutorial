@@ -7,10 +7,10 @@ from dataloader import stats
 BASE_URL = 'https://telebottutorial.herokuapp.com/'
 TELEBOT_URL = 'telebot_webhook/'
 
-API_TOKEN = os.environ['TOKEN']
+API_TOKEN = os.environ.get("TOKEN")
 bot = telebot.TeleBot(API_TOKEN)
 
-SECRETNAME = os.environ['SECRETNAME']
+SECRETNAME = os.environ.get("SECRETNAME")
 
 server = Flask(__name__)
 

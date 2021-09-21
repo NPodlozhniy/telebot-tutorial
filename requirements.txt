@@ -1,5 +1,8 @@
+# First version
 pytelegrambotapi
+# Second version
 flask
+# Third version
 gspread
 oauth2client
 df2gspread
