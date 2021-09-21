@@ -93,18 +93,24 @@ selects = ["""
     group by convert(date, TransactionDate)
     ;"""]
 
-def stats():    
-    yesterday = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S")
-    ref_dict, fact_dict = {}, {}
-    for idx, wks_name in enumerate(["card", "activation", "topup", "purchase"]):
-        df = g2d.download(spreadsheet_key,
-                          wks_name=wks_name,
-                          col_names=True,
-                          row_names=False,
-                          credentials=credentials)
-        ref_dict[wks_name] = int(df[df["date"] == yesterday].iloc[:, 1].values[0])
-        fact_dict[wks_name] = pd.read_sql(selects[idx], engine)["value"][0]
-    text = "Hello, dear colleague! \n Statistics for yesterday: \n" + \
-    '\n'.join([f" -> {key}s: expectation = {ref_dict[key]}, reality = {fact_dict[key]}"
-               for key in ref_dict.keys()])
-    return text
+import time
+def stats():
+    time.sleep(20)
+    a = range(1, 10)
+    return f"Hello, dear colleague! \n Statistics for yesterday: \n {[x for x in a]}"
+
+# def stats():    
+#     yesterday = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S")
+#     ref_dict, fact_dict = {}, {}
+#     for idx, wks_name in enumerate(["card", "activation", "topup", "purchase"]):
+#         df = g2d.download(spreadsheet_key,
+#                           wks_name=wks_name,
+#                           col_names=True,
+#                           row_names=False,
+#                           credentials=credentials)
+#         ref_dict[wks_name] = int(df[df["date"] == yesterday].iloc[:, 1].values[0])
+#         fact_dict[wks_name] = pd.read_sql(selects[idx], engine)["value"][0]
+#     text = "Hello, dear colleague! \n Statistics for yesterday: \n" + \
+#     '\n'.join([f" -> {key}s: expectation = {ref_dict[key]}, reality = {fact_dict[key]}"
+#                for key in ref_dict.keys()])
+#     return text
