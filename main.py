@@ -1,3 +1,5 @@
+SECRETNAME = os.environ.get('SECRETNAME')
+
 import argparse
 import os
 import telebot
