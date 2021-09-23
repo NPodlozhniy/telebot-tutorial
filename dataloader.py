@@ -41,7 +41,9 @@ def stats():
                           row_names=False,
                           credentials=credentials)
         fact_dict[wks_name] = int(df.iloc[0, 0])
+        if wks_name == 'card':
+            total = int(df.iloc[0, 1])
     text = "Hello, dear colleague! \n Statistics for yesterday: \n" + \
-    '\n'.join([f" -> {key}s: expectation = {ref_dict[key]}, reality = {fact_dict[key]}"
+    '\n'.join([f" -> {'paid ' if key == 'topup' else ''}{key}s: expectation = {ref_dict[key]}, reality = {fact_dict[key]}, total for a month = {total if key == 'card' else ''}"
                for key in ref_dict.keys()])
     return text
