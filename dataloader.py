@@ -25,7 +25,8 @@ credentials = ServiceAccountCredentials.from_json_keyfile_dict(
 gc = gspread.authorize(credentials)
 
 
-def stats():    
+def stats():
+    # statistics for yesterday
     yesterday = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S")
     ref_dict, fact_dict = {}, {}
     for idx, wks_name in enumerate(["card", "activation", "topup", "purchase"]):
@@ -43,7 +44,16 @@ def stats():
         fact_dict[wks_name] = int(df.iloc[0, 0])
         if wks_name == 'card':
             total = int(df.iloc[0, 1])
-    text = "Hello, dear colleague! \n Statistics for yesterday: \n" + \
+    text = "Hello, dear colleague! \n\n Statistics for yesterday: \n" + \
     '\n'.join([f" - {'paid ' if key == 'topup' else ''}{key}s: expectation = {ref_dict[key]}, reality = {fact_dict[key]}{f', total for a month = {total}' if key == 'card' else ''}"
                for key in ref_dict.keys()])
+    # all time statistics
+    df = g2d.download("19Lt8Bf0xglLDNcEjMBLV08r6UNmvAlRC3Z_tsOV1OUQ",
+                  wks_name="lifetime",
+                  col_names=False,
+                  row_names=False,
+                  credentials=credentials)
+    text += "\n\n Lifetime statistics:"
+    for i, name in enumerate(["card holders", "wallets created", "pre-ordered cards", "total customers"]):
+        text += f"\n - {name} = {int(df.iloc[0, i]):,}"
     return text
