@@ -1,6 +1,8 @@
 # telebot-tutorial
 __Sandbox for exploring telebot__
 
+[![Python application](https://github.com/NPodlozhniy/telebot-tutorial/actions/workflows/python-app.yml/badge.svg)](https://github.com/NPodlozhniy/telebot-tutorial/actions/workflows/python-app.yml)
+
 1. To start the "My first telegram bot" run the following commands:
 ```
 $ pip install pytelegrambotapi
