@@ -1,0 +1,27 @@
+{
+  "name": "telebot-tutorial",
+  "description": "Sandbox for exploring telebot",
+  "keywords": [
+	"python",
+	"flask",
+	"pytelegrambotapi"
+  ],
+  "repository": "https://github.com/NPodlozhniy/telebot-tutorial",
+  "env": {
+    "SECRETNAME": {
+      "description": "The secret key for the user access to data in telegram bot interface.",
+      "required": "true"
+    },
+    "TOKEN": {
+      "description": "The secret key of the telegram bot owner.",
+      "required": "true"
+    }
+  },
+  "environments": {
+    "test": {
+      "scripts": {
+        "test": "python test.py test"
+      }
+    }
+  }
+}
