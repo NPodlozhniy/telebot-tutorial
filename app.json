@@ -21,7 +21,12 @@
     "test": {
       "scripts": {
         "test": "python test.py test"
-      }
+      },
+	  "formation": {
+          "test": {
+            "quantity": 1,
+            "size": "standard-1x"
+	  }
     }
   }
 }
