@@ -1,5 +1,3 @@
-from dataloader import stats
-
 def test_stats():
     pass
 
