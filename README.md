@@ -2,7 +2,7 @@
 __Sandbox for exploring telebot__
 
 [![Python application](https://github.com/NPodlozhniy/telebot-tutorial/actions/workflows/python-app.yml/badge.svg)](https://github.com/NPodlozhniy/telebot-tutorial/actions/workflows/python-app.yml)
-[![Build Status](https://app.travis-ci.com/NPodlozhniy/telebot-tutorial.svg?token=QqdGuvQuDTwHxcNPfezP&branch=master)
+![Build Status](https://app.travis-ci.com/NPodlozhniy/telebot-tutorial.svg?token=QqdGuvQuDTwHxcNPfezP&branch=master)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 1. To start the "My first telegram bot" run the following commands:
