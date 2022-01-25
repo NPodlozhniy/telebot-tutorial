@@ -9,6 +9,18 @@ on:
   pull_request:
     branches: [ master ]
 
+env:
+  SHEET_AUTH_PROVIDER_X509_CERT_URL: ${{secrets.SHEET_AUTH_PROVIDER_X509_CERT_URL}}
+  SHEET_AUTH_URI: ${{secrets.SHEET_AUTH_URI}}
+  SHEET_CLIENT_EMAIL: ${{secrets.SHEET_CLIENT_EMAIL}}
+  SHEET_CLIENT_ID: ${{secrets.SHEET_CLIENT_ID}}
+  SHEET_CLIENT_X509_CERT_URL: ${{secrets.SHEET_CLIENT_X509_CERT_URL}}
+  SHEET_PRIVATE_KEY: ${{secrets.SHEET_PRIVATE_KEY}}
+  SHEET_PRIVATE_KEY_ID: ${{secrets.SHEET_PRIVATE_KEY_ID}}
+  SHEET_PROJECT_ID: ${{secrets.SHEET_PROJECT_ID}}
+  SHEET_TOKEN_URI: ${{secrets.SHEET_TOKEN_URI}}
+  SHEET_TYPE: ${{secrets.SHEET_TYPE}}
+
 jobs:
   build:
 
