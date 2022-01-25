@@ -20,7 +20,7 @@
   "environments": {
     "test": {
       "scripts": {
-        "test": "python test.py test"
+        "test": "python -m pytest"
       },
 	  "formation": {
           "test": {

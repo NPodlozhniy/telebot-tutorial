@@ -1,6 +1,6 @@
-import argparse
 import os
 import telebot
+import argparse
 from flask import Flask, request
 from dataloader import stats
 
@@ -8,10 +8,9 @@ BASE_URL = 'https://telebottutorial.herokuapp.com/'
 TELEBOT_URL = 'telebot_webhook/'
 
 API_TOKEN = os.environ.get("TOKEN")
-bot = telebot.TeleBot(API_TOKEN)
-
 SECRETNAME = os.environ.get("SECRETNAME")
 
+bot = telebot.TeleBot(API_TOKEN)
 server = Flask(__name__)
 
 # Handle '/start' and '/help'

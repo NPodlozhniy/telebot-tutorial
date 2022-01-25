@@ -6,3 +6,5 @@ flask
 gspread
 oauth2client
 df2gspread
+# for CI
+pytest
