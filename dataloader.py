@@ -1,8 +1,8 @@
-import datetime
 import os
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
+import datetime
 from df2gspread import gspread2df as g2d
+from oauth2client.service_account import ServiceAccountCredentials
 
 def create_keyfile_dict():
     return {
@@ -18,14 +18,21 @@ def create_keyfile_dict():
         "client_x509_cert_url": os.environ.get("SHEET_CLIENT_X509_CERT_URL")
     }
 
-scope = ['https://spreadsheets.google.com/feeds',
-         'https://www.googleapis.com/auth/drive']
-credentials = ServiceAccountCredentials.from_json_keyfile_dict(
-    create_keyfile_dict(), scopes=scope)
-gc = gspread.authorize(credentials)
+def gspread_authorize(create_keyfile_dict):
+    scopes = ['https://spreadsheets.google.com/feeds',
+             'https://www.googleapis.com/auth/drive']
+    credentials = ServiceAccountCredentials.from_json_keyfile_dict(
+        create_keyfile_dict(), scopes=scopes)
+    gspread.authorize(credentials)
+    return credentials
 
+def authorize_decorator(stats):
+    def wrapper():
+        return stats(gspread_authorize(create_keyfile_dict))
+    return wrapper
 
-def stats():
+@authorize_decorator
+def stats(credentials):
     # statistics for yesterday
     yesterday = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S")
     ref_dict, fact_dict = {}, {}
