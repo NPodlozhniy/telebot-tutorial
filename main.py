@@ -16,18 +16,22 @@ SECRETNAME = os.environ.get("SECRETNAME")
 bot = telebot.TeleBot(API_TOKEN)
 server = Flask(__name__)
 
+def keyboard_markup():
+    keyboard = telebot.types.InlineKeyboardMarkup()
+    keyboard.row_width = 2
+    keyboard.add(telebot.types.InlineKeyboardButton(text='Yes',
+                                                    callback_data='yes'),
+                 telebot.types.InlineKeyboardButton(text='No',
+                                                    callback_data='no'))
+    return keyboard
+
 # Handle '/start' and '/help'
 @bot.message_handler(commands=['help', 'start'])
 def send_welcome(message):
     dbworker.set_state(message.chat.id, config.states.init.value)
-    keyboard = telebot.types.InlineKeyboardMarkup()
-    keyboard.add(telebot.types.InlineKeyboardButton(text='Yes',
-                                                    callback_data='yes'))
-    keyboard.add(telebot.types.InlineKeyboardButton(text='No',
-                                                    callback_data='no'))
     bot.reply_to(message,
                  text="Hi there, I am an unofficial ZELF bot for the team! I can send you statistics for yesterday by the /stats command. Do you want to receive statistics?",
-                 reply_markup=keyboard)
+                 reply_markup=keyboard_markup())
 
 
 # Handle '/stats'
@@ -48,7 +52,9 @@ def get_auth(message):
         dbworker.set_state(message.chat.id, config.states.auth.value)
         send_stats(message)
     else:
-        bot.send_message(message.chat.id, "Are you really a ZELF employee?")
+        bot.send_message(message.chat.id,
+                         "Are you really a ZELF employee?",
+                         reply_markup=keyboard_markup())
 
 
 # If user is authorized send stats
