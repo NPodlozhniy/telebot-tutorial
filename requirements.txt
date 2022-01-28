@@ -8,3 +8,5 @@ oauth2client
 df2gspread
 # for CI
 pytest
+# Fourth version
+vedis

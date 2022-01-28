@@ -27,40 +27,87 @@ def gspread_authorize(create_keyfile_dict):
     return credentials
 
 def authorize_decorator(stats):
-    def wrapper():
-        return stats(gspread_authorize(create_keyfile_dict))
+    def wrapper(*kwargs):
+        return stats(gspread_authorize(create_keyfile_dict), *kwargs)
     return wrapper
 
 @authorize_decorator
-def stats(credentials):
-    # statistics for yesterday
+def stats(credentials, button):
+    """get statistics for yesterday"""
+
     yesterday = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S")
     ref_dict, fact_dict = {}, {}
-    for idx, wks_name in enumerate(["card", "activation", "topup", "purchase"]):
+
+    def wks_names(button) -> list:
+        if button.lower() == 'cards':
+            return ["wallet", "card", "tokenization"]
+        elif button.lower() == 'transactions':
+            return ["activation", "topup", "paid topup", "purchase"]
+        elif button.lower() == 'verifications':
+            return ["kyc", "junior-parent"]
+
+    def wks_swap(name) -> str:
+        if name == 'card':
+            return 'wallet'
+        elif name == 'wallet':
+            return 'card'
+        elif name == 'topup':
+            return 'paid topup'
+        elif name == 'paid topup':
+            return 'topup'
+        else:
+            return name
+
+    def get_expectation(wks_name, *kwargs) -> int:
         df = g2d.download("1pp01qoxMGsS7oCIwf83eOI0W_Wo6vYhhlBcXlmcGKL8",
                           wks_name=wks_name,
                           col_names=True,
                           row_names=False,
                           credentials=credentials)
-        ref_dict[wks_name] = int(df[df["date"] == yesterday].iloc[:, 1].values[0])
+        return int(df[df["date"] == yesterday].iloc[:, 1].values[0])
+
+    def get_reality(wks_name, *kwargs) -> list:
         df = g2d.download("19Lt8Bf0xglLDNcEjMBLV08r6UNmvAlRC3Z_tsOV1OUQ",
                           wks_name=wks_name,
                           col_names=False,
                           row_names=False,
                           credentials=credentials)
-        fact_dict[wks_name] = int(df.iloc[0, 0])
-        if wks_name == 'card':
-            total = int(df.iloc[0, 1])
-    text = "Hello, dear colleague! \n\n Statistics for yesterday: \n" + \
-    '\n'.join([f" - {'paid ' if key == 'topup' else ''}{key}s: expectation = {ref_dict[key]}, reality = {fact_dict[key]}{f', total for a month = {total}' if key == 'card' else ''}"
-               for key in ref_dict.keys()])
-    # all time statistics
+        return [int(x) for x in df.values[0]]
+
+    for wks_name in wks_names(button):
+        try:
+            ref_dict[wks_name] = get_expectation(wks_swap(wks_name))
+        except:
+            pass
+        fact_dict[wks_name] = get_reality(wks_name)
+
+    text = f"Hello, dear colleague! \n\n Statistics for yesterday by {button}: \n" + \
+    '\n'.join([f" - {key}s:" + \
+               f"{f' expectation = {ref_dict[key]},' if key in ref_dict.keys() else ''}" + \
+               f"{' new potential' if key == 'junior-parent' else ''}" + \
+               f"{' new' if key in ['tokenization', 'kyc'] else ''}" + \
+               f"{' reality' if key not in ['tokenization','junior-parent','kyc'] else ''}" + \
+               f" = {fact_dict[key][0]}" + \
+               f"{f', per month = {fact_dict[key][1]}' if key in ['wallet', 'card'] else ''}" + \
+               f"{f', total = {fact_dict[key][1]}' if key == 'kyc' else ''}"
+               f"{f', total confirmed = {fact_dict[key][1]}' if key == 'junior-parent' else ''}" + \
+               f"{f', unique = {fact_dict[key][1]}' if key == 'tokenization' else ''}"
+               for key in fact_dict.keys()])
+    return text
+
+
+@authorize_decorator
+def lifetime(credentials):
+    """get statistics for all the time"""
     df = g2d.download("19Lt8Bf0xglLDNcEjMBLV08r6UNmvAlRC3Z_tsOV1OUQ",
                   wks_name="lifetime",
                   col_names=False,
                   row_names=False,
                   credentials=credentials)
-    text += "\n\n Lifetime statistics:"
-    for i, name in enumerate(["card holders", "wallets created", "pre-ordered cards", "total customers"]):
-        text += f"\n - {name} = {int(df.iloc[0, i]):,}"
+    text = "Hello, dear colleague! \n\n Lifetime statistics:"
+    for idx, name in enumerate(["card holders",
+                                "wallets created",
+                                "pre-ordered cards",
+                                "total customers"]):
+        text += f"\n - {name} = {int(df.iloc[0, idx]):,}"
     return text
