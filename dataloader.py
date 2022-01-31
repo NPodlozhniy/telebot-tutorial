@@ -46,18 +46,6 @@ def stats(credentials, button):
         elif button.lower() == 'verifications':
             return ["kyc", "junior-parent"]
 
-    def wks_swap(name) -> str:
-        if name == 'card':
-            return 'wallet'
-        elif name == 'wallet':
-            return 'card'
-        elif name == 'topup':
-            return 'paid topup'
-        elif name == 'paid topup':
-            return 'topup'
-        else:
-            return name
-
     def get_expectation(wks_name, *kwargs) -> int:
         df = g2d.download("1pp01qoxMGsS7oCIwf83eOI0W_Wo6vYhhlBcXlmcGKL8",
                           wks_name=wks_name,
@@ -76,7 +64,7 @@ def stats(credentials, button):
 
     for wks_name in wks_names(button):
         try:
-            ref_dict[wks_name] = get_expectation(wks_swap(wks_name))
+            ref_dict[wks_name] = get_expectation(wks_name)
         except:
             pass
         fact_dict[wks_name] = get_reality(wks_name)
