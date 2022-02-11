@@ -1,4 +1,7 @@
 # telebot-tutorial
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/NPodlozhniy/telebot-tutorial&env[SECRETNAME]=YOUR+SECRET+CODE&env[TOKEN]=YOUR+TELEGRAM+BOT+TOKEN)
+
 __Sandbox for exploring telebot__
 
 [![Python application](https://github.com/NPodlozhniy/telebot-tutorial/actions/workflows/python-app.yml/badge.svg)](https://github.com/NPodlozhniy/telebot-tutorial/actions/workflows/python-app.yml)
