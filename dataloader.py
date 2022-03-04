@@ -40,7 +40,7 @@ def stats(credentials, button):
 
     def wks_names(button) -> list:
         if button.lower() == 'cards':
-            return ["wallet", "card", "tokenization"]
+            return ["wallet", "wallets (exclude on-demand)", "card", "tokenization"]
         elif button.lower() == 'transactions':
             return ["activation", "topup", "paid topup", "purchase"]
         elif button.lower() == 'verifications':
@@ -70,13 +70,14 @@ def stats(credentials, button):
         fact_dict[wks_name] = get_reality(wks_name)
 
     text = f"Hello, dear colleague! \n\n Statistics for yesterday by {button}: \n" + \
-    '\n'.join([f" - {key}s:" + \
+    '\n'.join([f" - {key}" + \
+               f"{'s:' if key != 'wallets (exclude on-demand)' else ':'}" + \
                f"{f' expectation = {ref_dict[key]},' if key in ref_dict.keys() else ''}" + \
                f"{' new potential' if key == 'junior-parent' else ''}" + \
                f"{' new' if key in ['tokenization', 'kyc'] else ''}" + \
                f"{' reality' if key not in ['tokenization','junior-parent','kyc'] else ''}" + \
                f" = {fact_dict[key][0]}" + \
-               f"{f', per month = {fact_dict[key][1]}' if key in ['wallet', 'card'] else ''}" + \
+               f"{f', per month = {fact_dict[key][1]}' if key in ['wallet', 'card', 'wallets (exclude on-demand)'] else ''}" + \
                f"{f', total = {fact_dict[key][1]}' if key == 'kyc' else ''}"
                f"{f', total confirmed = {fact_dict[key][1]}' if key == 'junior-parent' else ''}" + \
                f"{f', unique = {fact_dict[key][1]}' if key == 'tokenization' else ''}"
@@ -94,7 +95,10 @@ def lifetime(credentials):
                   credentials=credentials)
     text = "Hello, dear colleague! \n\n Lifetime statistics:"
     for idx, name in enumerate(["card holders",
-                                "wallets created",
+                                "cards opened",
+                                "wallets holders",
+                                "wallets opened",
+                                "wallets (include on-demand)",
                                 "pre-ordered cards",
                                 "total customers"]):
         text += f"\n - {name} = {int(df.iloc[0, idx]):,}"
