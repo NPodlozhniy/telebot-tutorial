@@ -184,8 +184,6 @@ parser = argparse.ArgumentParser(description='Run the bot')
 parser.add_argument('--local', action='store_true', help='run the bot in a local host')
 args = parser.parse_args()
 
-# Build only if the table is not in the database
-db.create_all()
 
 if args.local:
     bot.remove_webhook()

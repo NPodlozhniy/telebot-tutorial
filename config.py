@@ -17,6 +17,7 @@ class states(Enum):
 
 class db_config(object):
     """SQLAlchemy removed the deprecated 'postgres' dialect name, the name 'postgresql' must be used instead now"""
-    SQLALCHEMY_DATABASE_URI = 'postgresql' + os.environ.get("DATABASE_URL")[8:] or \
-            'sqlite:///' + os.path.join(basedir, 'app.db')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', '').replace(
+        'postgres://', 'postgresql://') or \
+        'sqlite:///' + os.path.join(basedir, 'app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
