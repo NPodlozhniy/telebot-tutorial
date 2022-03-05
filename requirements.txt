@@ -11,3 +11,4 @@ pytest
 # Fourth version
 vedis
 flask-sqlalchemy
+psycopg2
