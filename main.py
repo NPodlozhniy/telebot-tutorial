@@ -2,6 +2,7 @@ import os
 import telebot
 import argparse
 from flask import Flask, request
+from flask_sqlalchemy import SQLAlchemy
 
 import config
 import dbworker
@@ -15,6 +16,36 @@ SECRETNAME = os.environ.get("SECRETNAME")
 
 bot = telebot.TeleBot(API_TOKEN)
 server = Flask(__name__)
+
+# Add and configure statefull database
+server.config.from_object(config.db_config)
+db = SQLAlchemy(server)
+
+# After defining the server
+class User(db.Model):
+    """Table to store auth status"""
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer)
+    state = db.Column(db.String(128))
+
+    def __repr__(self):
+        return '<User state: {}>'.format(self.state)
+        
+    def login(self):
+        self.state = config.states.auth.value
+
+    def logout(self):
+        self.state = config.states.init.value
+
+def CreateUser(id):
+    """Add new string to the database"""
+    user = User(user_id=id, state=config.states.init.value)
+    db.session.add(user)
+    db.session.commit()
+
+def GetUser(id):
+    """Return the user instance"""
+    return User.query.filter_by(user_id=id).first()
 
 buttons = [b"\xF0\x9F\x92\xB3".decode() + " Cards",
            b"\xF0\x9F\x92\xB6".decode() + " Transactions",
@@ -48,6 +79,12 @@ def keyboard_remove():
 # Handle '/start' and '/help'
 @bot.message_handler(commands=['help', 'start'])
 def send_welcome(message):
+    user = GetUser(message.chat.id)
+    if user is None:
+        CreateUser(message.chat.id)
+    else:
+        user.logout()
+        db.session.commit()
     dbworker.set_state(message.chat.id, config.states.init.value)
     bot.reply_to(message,
                  text="Hi there, I am an unofficial ZELF bot for the team! I can send you statistics for yesterday by the /stats command. Do you want to receive statistics?",
@@ -58,8 +95,14 @@ def send_welcome(message):
 # Handle '/stats'
 @bot.message_handler(commands=['stats'])
 def send_auth(message):
-    state = dbworker.get_state(message.chat.id)
-    if state == config.states.auth.value:
+    user = GetUser(message.chat.id)
+    if user is None:
+        CreateUser(message.chat.id)
+        user = GetUser(message.chat.id)
+    if dbworker.get_state(message.chat.id) == config.states.auth.value:
+        send_options(message)
+    elif user.state == config.states.auth.value:
+        dbworker.set_state(message.chat.id, config.states.auth.value)
         send_options(message)
     else:
         bot.send_message(message.chat.id, "Who is the Master of Humor?")
@@ -69,6 +112,9 @@ def send_auth(message):
 # If user is not authorize offer to athorize
 def get_auth(message):
     if message.text.lower() == SECRETNAME.lower():
+        user = User.query.filter_by(user_id=message.chat.id).first()
+        user.login()
+        db.session.commit()
         dbworker.set_state(message.chat.id, config.states.auth.value)
         send_options(message)
     else:
@@ -138,6 +184,8 @@ parser = argparse.ArgumentParser(description='Run the bot')
 parser.add_argument('--local', action='store_true', help='run the bot in a local host')
 args = parser.parse_args()
 
+# Build only if the table is not in the database
+db.create_all()
 
 if args.local:
     bot.remove_webhook()

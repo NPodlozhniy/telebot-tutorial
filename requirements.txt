@@ -10,3 +10,4 @@ df2gspread
 pytest
 # Fourth version
 vedis
+flask-sqlalchemy
