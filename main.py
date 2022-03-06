@@ -41,10 +41,6 @@ class User(db.Model):
     def logout(self):
         self.state = config.states.init.value
 
-# Build only if the table is not in the database
-# db.create_all()
-manager.run()
-
 def CreateUser(id):
     """Add new string to the database"""
     user = User(user_id=id, state=config.states.init.value)
@@ -198,4 +194,5 @@ if args.local:
     bot.polling()
 else:
     server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
+    manager.run()
     webhook()
