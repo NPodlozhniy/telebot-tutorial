@@ -3,7 +3,8 @@ import telebot
 import argparse
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
-
+from flask_migrate import Migrate, MigrateCommand
+from flask_script import Manager
 import config
 import dbworker
 from dataloader import stats, lifetime
@@ -20,6 +21,9 @@ server = Flask(__name__)
 # Add and configure statefull database
 server.config.from_object(config.db_config)
 db = SQLAlchemy(server)
+migrate = Migrate(server, db)
+manager = Manager(server)
+manager.add_command('db', MigrateCommand)
 
 # After defining the server
 class User(db.Model):
@@ -36,6 +40,10 @@ class User(db.Model):
 
     def logout(self):
         self.state = config.states.init.value
+
+# Build only if the table is not in the database
+# db.create_all()
+manager.run()
 
 def CreateUser(id):
     """Add new string to the database"""

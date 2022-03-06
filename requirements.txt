@@ -10,5 +10,8 @@ df2gspread
 pytest
 # Fourth version
 vedis
-flask-sqlalchemy
-psycopg2
+# Use Flask database
+Flask-Migrate==2.6.0
+Flask-Script==2.0.6
+Flask-SQLAlchemy==2.4.1
+psycopg2==2.8.5
