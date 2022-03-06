@@ -15,14 +15,29 @@ API_TOKEN = os.environ.get("TOKEN")
 SECRETNAME = os.environ.get("SECRETNAME")
 
 bot = telebot.TeleBot(API_TOKEN)
-server = Flask(__name__)
+app = Flask(__name__)
 
 # Add and configure statefull database
-server.config.from_object(config.db_config)
-db = SQLAlchemy(server)
+app.config.from_object(config.db_config)
+db = SQLAlchemy(app)
 
 # After defining the server
-from models import User
+# from models import User
+
+class User(db.Model):
+    """Table to store auth status"""
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer)
+    state = db.Column(db.String(128))
+
+    def login(self):
+        self.state = config.states.auth.value
+
+    def logout(self):
+        self.state = config.states.init.value
+
+    def __repr__(self):
+        return '<User state: {}>'.format(self.state)
 
 def CreateUser(id):
     """Add new string to the database"""
@@ -153,13 +168,13 @@ def callback_worker(call):
 
 
 # Server passes messages to the bot
-@server.route('/' + TELEBOT_URL + API_TOKEN, methods=['POST'])
+@app.route('/' + TELEBOT_URL + API_TOKEN, methods=['POST'])
 def get_message():
     bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
     return "!", 200
         
 
-@server.route("/")
+@app.route("/")
 def webhook():
     bot.remove_webhook()
     bot.set_webhook(url=BASE_URL + TELEBOT_URL + API_TOKEN)
@@ -177,5 +192,5 @@ if __name__ == '__main__':
         bot.remove_webhook()
         bot.polling()
     else:
-        server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
+        app.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
         webhook()
