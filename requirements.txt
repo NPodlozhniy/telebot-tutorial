@@ -1,15 +1,15 @@
 # First version
-pytelegrambotapi
+pytelegrambotapi==4.0.1
 # Second version
-flask
+Flask==1.1.2
 # Third version
-gspread
-oauth2client
-df2gspread
+gspread==3.7.0
+oauth2client==4.1.3
+df2gspread==1.0.4
 # for CI
-pytest
+pytest==6.2.5
 # Fourth version
-vedis
+vedis==0.7.1
 # Use Flask database
 Flask-Migrate==2.6.0
 Flask-Script==2.0.6
