@@ -1,5 +1,5 @@
 import config
-from main import db, app
+from manage import db, app
 
 
 class User(db.Model):
