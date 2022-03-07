@@ -19,7 +19,10 @@ class User(db.Model):
     """Table to store auth status"""
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.BigInteger)
-    state = db.Column(db.String(128))
+    usename = db.Column(db.String(128))
+    first_name = db.Column(db.String(128))
+    last_name = db.Column(db.String(128))
+    state = db.Column(db.String(8))
 
     def login(self):
         self.state = config.states.auth.value
@@ -33,13 +36,17 @@ class User(db.Model):
         return '<User state: {}>'.format(self.state)
 
 
-def CreateUser(id):
+def CreateUser(message):
     """Add new string to the database"""
-    user = User(user_id=id, state=config.states.init.value)
+    user = User(user_id=message.chat.id,
+                usename=message.from_user.username,
+                last_name=message.from_user.last_name,
+                first_name=message.from_user.first_name,
+                state=config.states.init.value)
     db.session.add(user)
     db.session.commit()
 
 
-def GetUser(id):
+def GetUser(message):
     """Return the user instance"""
-    return User.query.filter_by(user_id=id).first()
+    return User.query.filter_by(user_id=message.chat.id).first()

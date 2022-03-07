@@ -19,8 +19,8 @@ app = Flask(__name__)
 
 # Declare and configure statefull database
 SetUp(app)
-# Uncomment on first deployment
-Create()
+# Uncomment only on first first deployment
+# Create()
 
 buttons = [b"\xF0\x9F\x92\xB3".decode() + " Cards",
            b"\xF0\x9F\x92\xB6".decode() + " Transactions",
@@ -54,24 +54,24 @@ def keyboard_remove():
 # Handle '/start' and '/help'
 @bot.message_handler(commands=['help', 'start'])
 def send_welcome(message):
-    user = GetUser(message.chat.id)
+    user = GetUser(message)
     if user is None:
-        CreateUser(message.chat.id)
+        CreateUser(message)
     else:
         user.logout()
     dbworker.set_state(message.chat.id, config.states.init.value)
     bot.reply_to(message,
-                text="Hi there, I am an unofficial ZELF bot for the team! I can send you statistics for yesterday by the /stats command. Do you want to receive statistics?",
+                text=f"Hi there, I am an unofficial ZELF bot for the team! I can send you statistics for yesterday by the /stats command. Do you want to receive statistics?",
                 reply_markup=keyboard_inline())
 
 
 # Handle '/stats'
 @bot.message_handler(commands=['stats'])
 def send_auth(message):
-    user = GetUser(message.chat.id)
+    user = GetUser(message)
     if user is None:
-        CreateUser(message.chat.id)
-        user = GetUser(message.chat.id)
+        CreateUser(message)
+        user = GetUser(message)
     if dbworker.get_state(message.chat.id) == config.states.auth.value:
         send_options(message)
     elif user.state == config.states.auth.value:
