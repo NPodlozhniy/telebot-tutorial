@@ -2,11 +2,11 @@ import os
 import telebot
 import argparse
 from flask import Flask, request
-from flask_sqlalchemy import SQLAlchemy
 
 import config
 import dbworker
 from dataloader import stats, lifetime
+from models import SetUp, Create, User, CreateUser, GetUser
 
 BASE_URL = 'https://telebottutorial.herokuapp.com/'
 TELEBOT_URL = 'telebot_webhook/'
@@ -17,22 +17,10 @@ SECRETNAME = os.environ.get("SECRETNAME")
 bot = telebot.TeleBot(API_TOKEN)
 app = Flask(__name__)
 
-# Add and configure statefull database
-app.config.from_object(config.db_config)
-db = SQLAlchemy(app)
-
-# After defining the server
-from models import User
-
-def CreateUser(id):
-    """Add new string to the database"""
-    user = User(user_id=id, state=config.states.init.value)
-    db.session.add(user)
-    db.session.commit()
-
-def GetUser(id):
-    """Return the user instance"""
-    return User.query.filter_by(user_id=id).first()
+# Declare and configure statefull database
+SetUp(app)
+# Uncomment on first run on local machine
+# Create()
 
 buttons = [b"\xF0\x9F\x92\xB3".decode() + " Cards",
            b"\xF0\x9F\x92\xB6".decode() + " Transactions",
@@ -71,7 +59,6 @@ def send_welcome(message):
         CreateUser(message.chat.id)
     else:
         user.logout()
-        db.session.commit()
     dbworker.set_state(message.chat.id, config.states.init.value)
     bot.reply_to(message,
                  text="Hi there, I am an unofficial ZELF bot for the team! I can send you statistics for yesterday by the /stats command. Do you want to receive statistics?",
@@ -101,7 +88,6 @@ def get_auth(message):
     if message.text.lower() == SECRETNAME.lower():
         user = User.query.filter_by(user_id=message.chat.id).first()
         user.login()
-        db.session.commit()
         dbworker.set_state(message.chat.id, config.states.auth.value)
         send_options(message)
     else:

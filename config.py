@@ -15,6 +15,7 @@ class states(Enum):
     init = "noname"
     auth = "zelfer"
 
+
 class db_config(object):
     """SQLAlchemy removed the deprecated 'postgres' dialect name, the name 'postgresql' must be used instead now"""
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', '').replace(
