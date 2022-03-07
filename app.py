@@ -20,7 +20,7 @@ app = Flask(__name__)
 # Declare and configure statefull database
 SetUp(app)
 # Uncomment only on first first deployment
-# Create()
+Create()
 
 buttons = [b"\xF0\x9F\x92\xB3".decode() + " Cards",
            b"\xF0\x9F\x92\xB6".decode() + " Transactions",
