@@ -61,9 +61,8 @@ def send_welcome(message):
         user.logout()
     dbworker.set_state(message.chat.id, config.states.init.value)
     bot.reply_to(message,
-                 text="Hi there, I am an unofficial ZELF bot for the team! I can send you statistics for yesterday by the /stats command. Do you want to receive statistics?",
-                 reply_markup=keyboard_inline())
-    unauth_message(message)
+                text="Hi there, I am an unofficial ZELF bot for the team! I can send you statistics for yesterday by the /stats command. Do you want to receive statistics?",
+                reply_markup=keyboard_inline())
 
 
 # Handle '/stats'
@@ -98,7 +97,6 @@ def get_auth(message):
 
 # If user is authorized send options
 def send_options(message):
-    # bot.send_message(message.chat.id, stats())
     bot.send_message(message.chat.id, "Choose one of the options below", reply_markup=keyboard_menu())
 
 

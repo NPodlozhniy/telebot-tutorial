@@ -18,7 +18,7 @@ def Create():
 class User(db.Model):
     """Table to store auth status"""
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer)
+    user_id = db.Column(db.BigInteger)
     state = db.Column(db.String(128))
 
     def login(self):
