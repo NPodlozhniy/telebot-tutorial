@@ -85,7 +85,7 @@ def send_auth(message):
 # If user is not authorize offer to athorize
 def get_auth(message):
     if message.text.lower() == SECRETNAME.lower():
-        user = User.query.filter_by(user_id=message.chat.id).first()
+        user = GetUser(message)
         user.login()
         dbworker.set_state(message.chat.id, config.states.auth.value)
         send_options(message)
@@ -122,9 +122,14 @@ def auth_message(message):
 # Handle sensitive messages from unauthorized users
 @bot.message_handler(func=lambda message: dbworker.get_state(message.chat.id) == config.states.init.value)
 def unauth_message(message):
-    bot.send_message(message.chat.id,
-                     "You need to pass the authorization to get statistics!",
-                     reply_markup=keyboard_remove())
+    user = GetUser(message)
+    if user is not None and user.state == config.states.auth.value:
+        dbworker.set_state(message.chat.id, config.states.auth.value)
+        auth_message(message)
+    else:
+        bot.send_message(message.chat.id,
+                        "You need to pass the authorization to get statistics!",
+                        reply_markup=keyboard_remove())
 
 
 # Handle pressing the button
