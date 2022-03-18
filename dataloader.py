@@ -52,7 +52,7 @@ def stats(credentials, button):
                           col_names=True,
                           row_names=False,
                           credentials=credentials)
-        return int(df[df["date"] == yesterday].iloc[:, 1].values[0])
+        return str(df[df["date"] == yesterday].iloc[:, 1].values[0])
 
     def get_reality(wks_name, *kwargs) -> list:
         df = g2d.download("19Lt8Bf0xglLDNcEjMBLV08r6UNmvAlRC3Z_tsOV1OUQ",
@@ -60,7 +60,7 @@ def stats(credentials, button):
                           col_names=False,
                           row_names=False,
                           credentials=credentials)
-        return [int(x) for x in df.values[0]]
+        return [str(x) for x in df.values[0]]
 
     for wks_name in wks_names(button):
         try:
