@@ -62,24 +62,21 @@ def stats(credentials, button):
                           row_names=False,
                           credentials=credentials)
         return [str(x) for x in df.values[0]]
-    
+
     # Threading to request concurrently`
     with ThreadPoolExecutor(max_workers=8) as pool:
-        future_expectation = {}
-        future_reality = {}
         for wks_name in wks_names(button):
-            try:
-                future_expectation[wks_name] = pool.submit(get_expectation, (wks_name))
-            except:
-                pass
-            future_reality[wks_name] = pool.submit(get_reality, (wks_name))
-    
+            ref_dict[wks_name] = pool.submit(get_expectation, (wks_name))
+            fact_dict[wks_name] = pool.submit(get_reality, (wks_name))
+
     # get results from threads
-    try:
-        ref_dict = {wks_name: task.result() for wks_name, task in future_expectation.items()}
-        fact_dict = {wks_name: task.result() for wks_name, task in future_reality.items()}
-    except:
-        pass
+    for wks_name in wks_names(button):
+        try:
+            ref_dict[wks_name] = ref_dict[wks_name].result()
+        except Exception as e:
+            print(e, flush=True)
+        finally:
+            fact_dict[wks_name] = fact_dict[wks_name].result()
 
     text = f"Hello, dear colleague! \n\n Statistics for yesterday by {button}: \n" + \
     '\n'.join([f" - {key}" + \
