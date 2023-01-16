@@ -73,8 +73,10 @@ def stats(credentials, button):
     for wks_name in wks_names(button):
         try:
             ref_dict[wks_name] = ref_dict[wks_name].result()
-        except Exception as e:
-            print(e, flush=True)
+        except RuntimeError: # if there is no tab
+            ref_dict.pop(wks_name)
+        except IndexError: # if there is no data
+            ref_dict.pop(wks_name)
         finally:
             fact_dict[wks_name] = fact_dict[wks_name].result()
 
