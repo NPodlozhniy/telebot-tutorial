@@ -63,7 +63,7 @@ def stats(credentials, button):
                           credentials=credentials)
         return [str(x) for x in df.values[0]]
     
-    # Threading to request concurrently
+    # Threading to request concurrently`
     with ThreadPoolExecutor(max_workers=8) as pool:
         future_expectation = {}
         future_reality = {}
@@ -75,8 +75,11 @@ def stats(credentials, button):
             future_reality[wks_name] = pool.submit(get_reality, (wks_name))
     
     # get results from threads
-    ref_dict = {wks_name: task.result() for wks_name, task in future_expectation.items()}
-    fact_dict = {wks_name: task.result() for wks_name, task in future_reality.items()}
+    try:
+        ref_dict = {wks_name: task.result() for wks_name, task in future_expectation.items()}
+        fact_dict = {wks_name: task.result() for wks_name, task in future_reality.items()}
+    except:
+        pass
 
     text = f"Hello, dear colleague! \n\n Statistics for yesterday by {button}: \n" + \
     '\n'.join([f" - {key}" + \
