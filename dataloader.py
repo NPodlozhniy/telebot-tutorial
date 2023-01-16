@@ -3,6 +3,7 @@ import gspread
 import datetime
 from df2gspread import gspread2df as g2d
 from oauth2client.service_account import ServiceAccountCredentials
+from concurrent.futures import ThreadPoolExecutor
 
 def create_keyfile_dict():
     return {
@@ -61,13 +62,21 @@ def stats(credentials, button):
                           row_names=False,
                           credentials=credentials)
         return [str(x) for x in df.values[0]]
-
-    for wks_name in wks_names(button):
-        try:
-            ref_dict[wks_name] = get_expectation(wks_name)
-        except:
-            pass
-        fact_dict[wks_name] = get_reality(wks_name)
+    
+    # Threading to request concurrently
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        future_expectation = {}
+        future_reality = {}
+        for wks_name in wks_names(button):
+            try:
+                future_expectation[wks_name] = pool.submit(get_expectation, (wks_name))
+            except:
+                pass
+            future_reality[wks_name] = pool.submit(get_reality, (wks_name))
+    
+    # get results from threads
+    ref_dict = {wks_name: task.result() for wks_name, task in future_expectation.items()}
+    fact_dict = {wks_name: task.result() for wks_name, task in future_reality.items()}
 
     text = f"Hello, dear colleague! \n\n Statistics for yesterday by {button}: \n" + \
     '\n'.join([f" - {key}" + \
